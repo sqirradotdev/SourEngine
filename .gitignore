@@ -1,0 +1,26 @@
+# VIsual Studio Code files (from https://www.toptal.com/developers/gitignore/api/visualstudiocode)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+# Local History for Visual Studio Code
+.history/
+# Built Visual Studio Code Extensions
+*.vsix
+# Ignore all local history of files
+.history
+.ionide
+
+# CMake build
+build/
+
+# Dependency directories
+deps/*
+!deps/glad/
+# Bootstrapping utility
+!deps/bootstrap.json
+!deps/bootstrap.py
+!deps/LICENSE
+!deps/README.md
