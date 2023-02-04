@@ -5,6 +5,9 @@
 #include <SDL.h>
 #include <glad/glad.h>
 
+#include "core/RenderManager.h"
+#include "core/ShaderProgram.h"
+
 const char* defaultVertexShaderSource = R"(
 #version 330 core
 
@@ -30,27 +33,17 @@ void main()
 
 int main()
 {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    std::cout << "Hello!" << std::endl;
+
+    if (SDL_Init(SDL_INIT_EVENTS) != 0)
     {
-        std::cout << "SDL_Init failed: " << SDL_GetError() << std::endl;
+        std::cout << "Cannot initialize SDL: " << SDL_GetError() << std::endl;
         return 1;
     }
 
-    SDL_Window* window = SDL_CreateWindow("SourEngine", 100, 100, 640, 480, SDL_WINDOW_OPENGL);
-    if (window == nullptr)
-    {
-        std::cout << "SDL_CreateWindow failed: " << SDL_GetError() << std::endl;
+    if (RenderManager::Init() != 0)
         return 1;
-    }
 
-    SDL_GLContext glContext = SDL_GL_CreateContext(window);
-    if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
-    {
-        std::cout << "gladLoadGLLoader (GL) failed: " << SDL_GetError() << std::endl;
-        return 1;
-    }
-
-    // draw quad
     float vertices[] = {
         -0.5f, -0.5f, 0.0f,
         0.5f, -0.5f, 0.0f,
@@ -72,45 +65,10 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    // compile shaders
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &defaultVertexShaderSource, nullptr);
-    glCompileShader(vertexShader);
-
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-        std::cout << "Vertex shader compile failed!" << std::endl;
-    }
-
-    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &defaultFragmentShaderSource, nullptr);
-    glCompileShader(fragmentShader);
-
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
-        std::cout << "Fragment shader compile failed!" << std::endl;
-    }
-
-    unsigned int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success)
-    {
-        glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
-        std::cout << "Shader program link failed!" << std::endl;
-    }
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    ShaderProgram shaderProgam;
+    shaderProgam.vertexShaderSource = defaultVertexShaderSource;
+    shaderProgam.fragmentShaderSource = defaultFragmentShaderSource;
+    shaderProgam.Compile();
 
     bool running = true;
     while (running)
@@ -125,13 +83,16 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glBindVertexArray(VAO);
-        glUseProgram(shaderProgram);
+        glUseProgram(shaderProgam.GetProgramID());
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        SDL_GL_SwapWindow(window);
+        SDL_GL_SwapWindow(RenderManager::GetInstance()->GetWindow());
     }
 
+    RenderManager::Shutdown();
     SDL_Quit();
+
+    std::cout << "Goodbye." << std::endl;
 
     return 0;
 }

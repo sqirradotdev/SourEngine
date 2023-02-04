@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.24)
 
 project(SourEngine VERSION 0.1.0 LANGUAGES CXX C)
 
-#add_subdirectory(deps/src/SDL2)
+set(CMAKE_CXX_STANDARD 17)
 
 get_filename_component(SDL2_DIR "./deps/SDL2/cmake" REALPATH)
 
@@ -13,6 +13,12 @@ add_subdirectory(deps/glad)
 
 add_executable(SourEngine
     src/main.cpp
+
+    src/core/RenderManager.h
+    src/core/RenderManager.cpp
+
+    src/core/ShaderProgram.h
+    src/core/ShaderProgram.cpp
 )
 
 if(TARGET SDL2::SDL2main)
