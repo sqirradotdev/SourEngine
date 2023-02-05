@@ -4,7 +4,7 @@ project(SourEngine VERSION 0.1.0 LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 
-get_filename_component(SDL2_DIR "./deps/SDL2/cmake" REALPATH)
+#get_filename_component(SDL2_DIR "./deps/SDL2/cmake" REALPATH)
 
 find_package(SDL2 REQUIRED CONFIG REQUIRED COMPONENTS SDL2)
 find_package(SDL2 REQUIRED CONFIG COMPONENTS SDL2main)
@@ -19,6 +19,9 @@ add_executable(SourEngine
 
     src/core/ShaderProgram.h
     src/core/ShaderProgram.cpp
+
+    src/core/util/Types.h
+    src/core/util/Error.h
 )
 
 if(TARGET SDL2::SDL2main)

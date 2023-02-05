@@ -8,29 +8,6 @@
 #include "core/RenderManager.h"
 #include "core/ShaderProgram.h"
 
-const char* defaultVertexShaderSource = R"(
-#version 330 core
-
-layout (location = 0) in vec3 aPos;
-
-void main()
-{
-    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-}
-)";
-
-const char* defaultFragmentShaderSource = R"(
-#version 330 core
-
-// First out variable defines the color of the fragment
-out vec4 fragColor;
-
-void main()
-{
-    fragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
-}
-)";
-
 int main()
 {
     std::cout << "Hello!" << std::endl;
@@ -65,11 +42,6 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    ShaderProgram shaderProgam;
-    shaderProgam.vertexShaderSource = defaultVertexShaderSource;
-    shaderProgam.fragmentShaderSource = defaultFragmentShaderSource;
-    shaderProgam.Compile();
-
     bool running = true;
     while (running)
     {
@@ -80,13 +52,9 @@ int main()
                 running = false;
         }
 
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glBindVertexArray(VAO);
-        glUseProgram(shaderProgam.GetProgramID());
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        SDL_GL_SwapWindow(RenderManager::GetInstance()->GetWindow());
+        RenderManager::GetInstance()->Clear();
+        RenderManager::GetInstance()->Draw(VAO, RenderManager::GetInstance()->GetDefaultShaderProgram().GetProgramID(), 3);
+        RenderManager::GetInstance()->Render();
     }
 
     RenderManager::Shutdown();

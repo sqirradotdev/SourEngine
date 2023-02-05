@@ -4,6 +4,12 @@
 
 ShaderProgram::ShaderProgram() : m_programID(0), m_programCompiled(false) {}
 
+ShaderProgram::ShaderProgram(const char *vertexShaderSource, const char *fragmentShaderSource)
+    : vertexShaderSource(vertexShaderSource), fragmentShaderSource(fragmentShaderSource) {}
+
+ShaderProgram::ShaderProgram(std::string vertexShaderSource, std::string fragmentShaderSource)
+    : vertexShaderSource(vertexShaderSource), fragmentShaderSource(fragmentShaderSource) {}
+
 ShaderProgram::~ShaderProgram()
 {
     if (m_programCompiled)

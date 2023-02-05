@@ -11,6 +11,8 @@ public:
     std::string fragmentShaderSource;
 
     ShaderProgram();
+    ShaderProgram(const char* vertexShaderSource, const char* fragmentShaderSource);
+    ShaderProgram(std::string vertexShaderSource, std::string fragmentShaderSource);
     ~ShaderProgram();
 
     int Compile();

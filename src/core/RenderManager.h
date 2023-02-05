@@ -1,6 +1,10 @@
 #pragma once
 
+#include <vector>
+
 #include <SDL.h>
+
+#include "ShaderProgram.h"
 
 class RenderManager
 {
@@ -9,6 +13,8 @@ private:
 
     SDL_Window* m_window;
     SDL_GLContext m_glContext;
+
+    ShaderProgram m_defaultShaderProgram;
 
     RenderManager();
 
@@ -23,4 +29,11 @@ public:
 
     SDL_Window* GetWindow() const;
     SDL_GLContext GetGLContext() const;
+
+    void Draw(unsigned int VAO, unsigned int shaderProgramID, unsigned int count);
+    void Clear();
+
+    void Render();
+
+    ShaderProgram& GetDefaultShaderProgram() { return m_defaultShaderProgram; }
 };
