@@ -14,5 +14,13 @@
             "url": "https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip",
             "sha1": "45408897f419944fb28d8fd835791f237be2ec19"
         }
+    },
+    {
+        "name": "spdlog",
+        "source": {
+            "type": "archive",
+            "url": "https://github.com/gabime/spdlog/archive/refs/tags/v1.11.0.zip",
+            "sha1": "4075d3da589d2000cffbd53ea8d31715a64ff8c6"
+        }
     }
 ]

@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "LogManager.h"
+
 ShaderProgram::ShaderProgram() : m_programID(0), m_programCompiled(false) {}
 
 ShaderProgram::ShaderProgram(const char *vertexShaderSource, const char *fragmentShaderSource)
@@ -34,7 +36,7 @@ int ShaderProgram::Compile()
     if (!success)
     {
         glGetShaderInfoLog(vertexShaderID, 1024, nullptr, infoLog);
-        std::cout << "Vertex shader compile failed!\n" << infoLog << std::endl;
+        LOG_ERROR("Vertex shader compile failed!\n{0}", infoLog);
         glDeleteShader(vertexShaderID);
         return 1;
     }
@@ -48,7 +50,7 @@ int ShaderProgram::Compile()
     if (!success)
     {
         glGetShaderInfoLog(fragmentShaderID, 1024, nullptr, infoLog);
-        std::cout << "Fragment shader compile failed!\n" << infoLog << std::endl;
+        LOG_ERROR("Fragment shader compile failed!\n{0}", infoLog);
         glDeleteShader(vertexShaderID);
         glDeleteShader(fragmentShaderID);
         return 1;
@@ -63,7 +65,7 @@ int ShaderProgram::Compile()
     if (!success)
     {
         glGetProgramInfoLog(m_programID, 1024, nullptr, infoLog);
-        std::cout << "Shader program link failed!\n" << infoLog << std::endl;
+        LOG_ERROR("Program link failed!\n{0}", infoLog);
         glDeleteShader(vertexShaderID);
         glDeleteShader(fragmentShaderID);
         glDeleteProgram(m_programID);

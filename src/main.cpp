@@ -5,16 +5,23 @@
 #include <SDL.h>
 #include <glad/glad.h>
 
+#include "core/LogManager.h"
 #include "core/RenderManager.h"
 #include "core/ShaderProgram.h"
 
 int main()
 {
-    std::cout << "Hello!" << std::endl;
+    if (LogManager::Init() != 0)
+        return 1;
+
+    LOG_INFO("Welcome to SourEngine!");
+#ifndef NDEBUG
+    LOG_WARN("You are running a debug build, expect crashes and performance degrades :)");
+#endif
 
     if (SDL_Init(SDL_INIT_EVENTS) != 0)
     {
-        std::cout << "Cannot initialize SDL: " << SDL_GetError() << std::endl;
+        LOG_CRITICAL("SDL_Init Error: {0}", SDL_GetError());
         return 1;
     }
 
@@ -60,7 +67,7 @@ int main()
     RenderManager::Shutdown();
     SDL_Quit();
 
-    std::cout << "Goodbye." << std::endl;
+    LOG_INFO("Goodbye!");
 
     return 0;
 }

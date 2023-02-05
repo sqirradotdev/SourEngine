@@ -3,6 +3,8 @@
 #include <iostream>
 #include <glad/glad.h>
 
+#include "LogManager.h"
+
 const char* defaultVertexShaderSource = R"(
 #version 330 core
 
@@ -31,7 +33,7 @@ RenderManager::RenderManager() {}
 
 int RenderManager::InternalInit()
 {
-    std::cout << "RenderManager initializing..." << std::endl;
+    LOG_INFO("Initializing RenderManager...");
 
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0)
         return 1;
@@ -72,7 +74,7 @@ int RenderManager::Init()
     {
         delete m_instance;
 
-        std::cout << "RenderManager init failed..." << std::endl;
+        LOG_CRITICAL("Failed to initialize RenderManager!");
         return 1;
     }
 

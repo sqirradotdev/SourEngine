@@ -30,15 +30,16 @@ find_package(SDL2 REQUIRED CONFIG COMPONENTS SDL2main)
 
 add_subdirectory(deps/glad)
 add_subdirectory(deps/glm)
+add_subdirectory(deps/spdlog)
 
 add_executable(SourEngine
     src/main.cpp
 
-    src/core/RenderManager.h
-    src/core/RenderManager.cpp
+    # Managers
+    src/core/RenderManager.h    src/core/RenderManager.cpp
+    src/core/LogManager.h       src/core/LogManager.cpp
 
-    src/core/ShaderProgram.h
-    src/core/ShaderProgram.cpp
+    src/core/ShaderProgram.h    src/core/ShaderProgram.cpp
 
     src/core/util/Types.h
     src/core/util/Error.h
@@ -52,6 +53,7 @@ endif()
 target_link_libraries(SourEngine PRIVATE SDL2::SDL2)
 target_link_libraries(SourEngine PRIVATE glad)
 target_link_libraries(SourEngine PRIVATE glm)
+target_link_libraries(SourEngine PRIVATE spdlog::spdlog)
 
 if (WIN32)
     add_custom_target(copy_dlls ALL
