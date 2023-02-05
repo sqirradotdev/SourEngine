@@ -31,6 +31,8 @@ RenderManager::RenderManager() {}
 
 int RenderManager::InternalInit()
 {
+    std::cout << "RenderManager initializing..." << std::endl;
+
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0)
         return 1;
 
@@ -100,7 +102,7 @@ void RenderManager::Clear()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void RenderManager::Render()
+void RenderManager::Flush()
 {
     SDL_GL_SwapWindow(m_window);
 }

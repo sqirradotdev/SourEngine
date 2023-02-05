@@ -54,7 +54,7 @@ int main()
 
         RenderManager::GetInstance()->Clear();
         RenderManager::GetInstance()->Draw(VAO, RenderManager::GetInstance()->GetDefaultShaderProgram().GetProgramID(), 3);
-        RenderManager::GetInstance()->Render();
+        RenderManager::GetInstance()->Flush();
     }
 
     RenderManager::Shutdown();

@@ -6,5 +6,13 @@
             "url": "https://github.com/libsdl-org/SDL/releases/download/release-2.26.2/SDL2-devel-2.26.2-VC.zip",
             "sha1": "25624a5355cde066e544d094ae007a39d37da395"
         }
+    },
+    {
+        "name": "glm",
+        "source": {
+            "type": "archive",
+            "url": "https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip",
+            "sha1": "45408897f419944fb28d8fd835791f237be2ec19"
+        }
     }
 ]
