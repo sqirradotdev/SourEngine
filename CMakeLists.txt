@@ -32,14 +32,20 @@ add_subdirectory(deps/glad)
 add_subdirectory(deps/glm)
 add_subdirectory(deps/spdlog)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/bin/")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}")
+
 add_executable(SourEngine
     src/main.cpp
 
     # Managers
-    src/core/RenderManager.h    src/core/RenderManager.cpp
-    src/core/LogManager.h       src/core/LogManager.cpp
+    src/core/RenderManager.h
+    src/core/RenderManager.cpp
+    src/core/LogManager.h
+    src/core/LogManager.cpp
 
-    src/core/ShaderProgram.h    src/core/ShaderProgram.cpp
+    src/core/ShaderProgram.h
+    src/core/ShaderProgram.cpp
 
     src/core/util/Types.h
     src/core/util/Error.h
@@ -55,9 +61,11 @@ target_link_libraries(SourEngine PRIVATE glad)
 target_link_libraries(SourEngine PRIVATE glm)
 target_link_libraries(SourEngine PRIVATE spdlog::spdlog)
 
+set_target_properties(SourEngine PROPERTIES OUTPUT_NAME "SourEngine")
+set_target_properties(SourEngine PROPERTIES DEBUG_POSTFIX "-debug")
+
 if (WIN32)
-    add_custom_target(copy_dlls ALL
+    add_custom_command(TARGET SourEngine POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SDL2_DIR}/../lib/x64/SDL2.dll" $<TARGET_FILE_DIR:SourEngine>
     )
-    add_dependencies(SourEngine copy_dlls)
 endif()

@@ -16,6 +16,9 @@
 # CMake build
 build/
 
+# Compiled binaries
+bin/
+
 # Dependency directories
 deps/*
 !deps/glad/
