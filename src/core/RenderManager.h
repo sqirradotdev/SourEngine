@@ -3,8 +3,12 @@
 #include <vector>
 
 #include <SDL.h>
+#include <glm/mat4x4.hpp>
 
 #include "ShaderProgram.h"
+
+#define RECT_BATCH_LIMIT 512
+#define BATCH_BUFFER_SIZE RECT_BATCH_LIMIT * 3 * 4
 
 /**
  * @brief Low level rendering manager.
@@ -17,11 +21,23 @@ private:
     SDL_Window* m_window;
     SDL_GLContext m_glContext;
 
+    // 2D rect batching
+    GLfloat m_batchBuffer[BATCH_BUFFER_SIZE];
+    GLfloat m_batchIndices[RECT_BATCH_LIMIT * 6];
+    unsigned int m_batchBufferIndex;
+    unsigned int m_batchIndicesBufferIndex;
+    unsigned int m_batchVAO;
+    unsigned int m_batchVBO;
+    unsigned int m_batchEBO;
+
+    glm::mat4 m_orthoProjectionMatrix;
+
     ShaderProgram m_defaultShaderProgram;
 
     RenderManager();
 
     int InternalInit();
+    int Setup2D();
 public:
     ~RenderManager();
 
@@ -61,7 +77,9 @@ public:
      * @param count The number of vertices to draw.
     */
     void Draw(unsigned int VAO, unsigned int shaderProgramID, unsigned int count);
-    
+
+    void DrawRect(float x, float y, float width, float height);
+
     /**
      * @brief Clear the screen.
     */
@@ -71,7 +89,7 @@ public:
      * @brief Swap the buffers and display the rendered scene.
      * @note This function should be called whenever the scene is ready to be displayed.
     */
-    void Flush();
+    void Present();
 
     ShaderProgram& GetDefaultShaderProgram() { return m_defaultShaderProgram; }
 };

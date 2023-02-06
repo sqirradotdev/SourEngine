@@ -1,6 +1,7 @@
 #include "ShaderProgram.h"
 
 #include <iostream>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "LogManager.h"
 
@@ -9,7 +10,7 @@ ShaderProgram::ShaderProgram() : m_programID(0), m_programCompiled(false) {}
 ShaderProgram::ShaderProgram(const char *vertexShaderSource, const char *fragmentShaderSource)
     : vertexShaderSource(vertexShaderSource), fragmentShaderSource(fragmentShaderSource) {}
 
-ShaderProgram::ShaderProgram(std::string vertexShaderSource, std::string fragmentShaderSource)
+ShaderProgram::ShaderProgram(std::string& vertexShaderSource, std::string& fragmentShaderSource)
     : vertexShaderSource(vertexShaderSource), fragmentShaderSource(fragmentShaderSource) {}
 
 ShaderProgram::~ShaderProgram()
@@ -82,3 +83,33 @@ int ShaderProgram::Compile()
 }
 
 GLuint ShaderProgram::GetProgramID() const { return m_programID; }
+
+void ShaderProgram::SetUniform(const std::string& name, float value) const
+{
+    glUniform1f(glGetUniformLocation(m_programID, name.c_str()), value);
+}
+
+void ShaderProgram::SetUniform(const std::string& name, float v0, float v1) const
+{
+    glUniform2f(glGetUniformLocation(m_programID, name.c_str()), v0, v1);
+}
+
+void ShaderProgram::SetUniform(const std::string& name, glm::vec2& value) const
+{
+    glUniform2f(glGetUniformLocation(m_programID, name.c_str()), value.x, value.y);
+}
+
+void ShaderProgram::SetUniform(const std::string& name, float v0, float v1, float v2) const
+{
+    glUniform3f(glGetUniformLocation(m_programID, name.c_str()), v0, v1, v2);
+}
+
+void ShaderProgram::SetUniform(const std::string& name, glm::vec3& value) const
+{
+    glUniform3f(glGetUniformLocation(m_programID, name.c_str()), value.x, value.y, value.z);
+}
+
+void ShaderProgram::SetUniform(const std::string& name, glm::mat4& value) const
+{
+    glUniformMatrix4fv(glGetUniformLocation(m_programID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+}
