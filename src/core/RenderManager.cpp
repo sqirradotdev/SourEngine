@@ -33,7 +33,7 @@ void main()
 RenderManager* RenderManager::m_instance = nullptr;
 
 RenderManager::RenderManager()
-    : m_window(nullptr), m_batchBufferIndex(0), m_batchVAO(0), m_batchVBO(0) {}
+    : m_window(nullptr), m_batchBufferIndex(0), m_batchIndicesBufferIndex(0), m_batchVAO(0), m_batchVBO(0), m_batchEBO(0) {}
 
 int RenderManager::InternalInit()
 {
@@ -58,6 +58,8 @@ int RenderManager::InternalInit()
     if (m_defaultShaderProgram.Compile() != 0)
         return 1;
 
+    Setup2D();
+
     return 0;
 }
 
@@ -77,7 +79,7 @@ int RenderManager::Setup2D()
     //ebo
     glGenBuffers(1, &m_batchEBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_batchEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_batchIndices), m_batchIndices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_batchIndicesBuffer), m_batchIndicesBuffer, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -121,6 +123,7 @@ SDL_Window *RenderManager::GetWindow() const { return m_window; }
 
 SDL_GLContext RenderManager::GetGLContext() const { return SDL_GLContext(); }
 
+// TODO: make this useful again
 void RenderManager::Draw(unsigned int VAO, unsigned int shaderProgramID, unsigned int count)
 {
     glUseProgram(shaderProgramID);
@@ -131,10 +134,10 @@ void RenderManager::Draw(unsigned int VAO, unsigned int shaderProgramID, unsigne
 void RenderManager::DrawRect(float x, float y, float width, float height)
 {
     float vertices[] = {
-        x, y, 0.0f,
-        x + width, y, 0.0f,
+        x        , y         , 0.0f,
+        x + width, y         , 0.0f,
         x + width, y + height, 0.0f,
-        x, y + height, 0.0f
+        x        , y + height, 0.0f
     };
 
     unsigned int indices[] = {
@@ -145,9 +148,9 @@ void RenderManager::DrawRect(float x, float y, float width, float height)
     for (int i = 0; i < 12; i++)
         m_batchBuffer[m_batchBufferIndex++] = vertices[i];
 
-    unsigned int offset = m_batchBufferIndex;
+    unsigned int offset = m_batchIndicesBufferIndex / 6 * 4;
     for (int i = 0; i < 6; i++)
-        m_batchIndices[m_batchBufferIndex++] = indices[i] + offset;
+        m_batchIndicesBuffer[m_batchIndicesBufferIndex++] = indices[i] + offset;
 }
 
 void RenderManager::Clear()
@@ -162,11 +165,11 @@ void RenderManager::Present()
     glBindBuffer(GL_ARRAY_BUFFER, m_batchVBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, m_batchBufferIndex * sizeof(float), m_batchBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_batchIndicesBufferIndex * sizeof(unsigned int), m_batchIndices);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_batchIndicesBufferIndex * sizeof(unsigned int), m_batchIndicesBuffer);
 
     glUseProgram(m_defaultShaderProgram.GetProgramID());
     m_defaultShaderProgram.SetUniform("mvp", m_orthoProjectionMatrix);
-    glDrawElements(GL_TRIANGLES, m_batchBufferIndex, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, m_batchIndicesBufferIndex, GL_UNSIGNED_INT, 0);
 
     m_batchBufferIndex = 0;
     m_batchIndicesBufferIndex = 0;

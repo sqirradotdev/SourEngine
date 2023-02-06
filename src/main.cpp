@@ -62,6 +62,9 @@ int main()
         RenderManager::GetInstance()->Clear();
         //RenderManager::GetInstance()->Draw(VAO, RenderManager::GetInstance()->GetDefaultShaderProgram().GetProgramID(), 3);
         RenderManager::GetInstance()->DrawRect(10, 10, 100, 100);
+        RenderManager::GetInstance()->DrawRect(10, 120, 100, 100);
+        RenderManager::GetInstance()->DrawRect(10, 230, 100, 100);
+        RenderManager::GetInstance()->DrawRect(10, 340, 100, 100);
         RenderManager::GetInstance()->Present();
     }
 

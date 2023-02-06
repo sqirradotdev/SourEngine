@@ -23,7 +23,7 @@ private:
 
     // 2D rect batching
     GLfloat m_batchBuffer[BATCH_BUFFER_SIZE];
-    GLfloat m_batchIndices[RECT_BATCH_LIMIT * 6];
+    GLuint m_batchIndicesBuffer[RECT_BATCH_LIMIT * 6];
     unsigned int m_batchBufferIndex;
     unsigned int m_batchIndicesBufferIndex;
     unsigned int m_batchVAO;
