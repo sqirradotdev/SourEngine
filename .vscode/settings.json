@@ -74,6 +74,9 @@
         "xtr1common": "cpp",
         "xtree": "cpp",
         "xutility": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "queue": "cpp",
+        "__config": "cpp",
+        "__nullptr": "cpp"
     }
 }

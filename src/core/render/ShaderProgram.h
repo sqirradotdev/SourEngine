@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 
 #include <glad/glad.h>
 #include <glm/vec2.hpp>
@@ -12,6 +13,8 @@ class ShaderProgram
 private:
     GLuint m_programID;
     bool m_programCompiled;
+
+    std::unordered_map<std::string, int> m_uniformCache;
 public:
     /**
      * @brief The source code of the vertex shader.
@@ -41,11 +44,14 @@ public:
     */
     GLuint GetProgramID() const;
 
+    GLuint GetUniformLocation(const std::string& name);
+
     // function to set uniforms
-    void SetUniform(const std::string& name, float value) const;
-    void SetUniform(const std::string& name, float v0, float v1) const;
-    void SetUniform(const std::string& name, glm::vec2& value) const;
-    void SetUniform(const std::string& name, float v0, float v1, float v2) const;
-    void SetUniform(const std::string& name, glm::vec3& value) const;
-    void SetUniform(const std::string& name, glm::mat4& value) const;
+    void SetUniform(const std::string& name, int value);
+    void SetUniform(const std::string& name, float value);
+    void SetUniform(const std::string& name, float v0, float v1);
+    void SetUniform(const std::string& name, glm::vec2& value);
+    void SetUniform(const std::string& name, float v0, float v1, float v2);
+    void SetUniform(const std::string& name, glm::vec3& value);
+    void SetUniform(const std::string& name, glm::mat4& value);
 };

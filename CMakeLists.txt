@@ -38,14 +38,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEA
 add_executable(SourEngine
     src/main.cpp
 
-    # Managers
-    src/core/RenderManager.h
-    src/core/RenderManager.cpp
     src/core/LogManager.h
     src/core/LogManager.cpp
 
-    src/core/ShaderProgram.h
-    src/core/ShaderProgram.cpp
+    src/core/render/RenderManager.h
+    src/core/render/RenderManager.cpp
+    src/core/render/ShaderProgram.h
+    src/core/render/ShaderProgram.cpp
 
     src/core/util/Types.h
     src/core/util/Error.h

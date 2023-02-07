@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include <SDL.h>
 #include <glm/mat4x4.hpp>
 
@@ -21,18 +19,18 @@ private:
     SDL_Window* m_window;
     SDL_GLContext m_glContext;
 
-    // 2D rect batching
-    GLfloat m_batchBuffer[BATCH_BUFFER_SIZE];
-    GLuint m_batchIndicesBuffer[RECT_BATCH_LIMIT * 6];
-    unsigned int m_batchBufferIndex;
-    unsigned int m_batchIndicesBufferIndex;
-    unsigned int m_batchVAO;
-    unsigned int m_batchVBO;
-    unsigned int m_batchEBO;
-
-    glm::mat4 m_orthoProjectionMatrix;
-
-    ShaderProgram m_defaultShaderProgram;
+    struct
+    {
+        GLfloat batchBuffer[BATCH_BUFFER_SIZE];
+        GLuint batchIndicesBuffer[RECT_BATCH_LIMIT * 6];
+        ShaderProgram shaderProgram;
+        glm::mat4 projectionMatrix;
+        GLuint batchBufferIndex;
+        GLuint batchIndicesBufferIndex;
+        GLuint batchVAO;
+        GLuint batchVBO;
+        GLuint batchEBO;
+    } m_renderState2D;
 
     RenderManager();
 
@@ -78,7 +76,9 @@ public:
     */
     void Draw(unsigned int VAO, unsigned int shaderProgramID, unsigned int count);
 
+    void Begin2D();
     void DrawRect(float x, float y, float width, float height);
+    void End2D();
 
     /**
      * @brief Clear the screen.
@@ -90,6 +90,4 @@ public:
      * @note This function should be called whenever the scene is ready to be displayed.
     */
     void Present();
-
-    ShaderProgram& GetDefaultShaderProgram() { return m_defaultShaderProgram; }
 };
