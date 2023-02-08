@@ -77,6 +77,10 @@
         "cinttypes": "cpp",
         "queue": "cpp",
         "__config": "cpp",
-        "__nullptr": "cpp"
+        "__nullptr": "cpp",
+        "*.rh": "cpp",
+        "cstdarg": "cpp",
+        "deque": "cpp",
+        "*.tpp": "cpp"
     }
 }

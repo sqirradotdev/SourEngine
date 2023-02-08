@@ -11,7 +11,7 @@ private:
 
     std::shared_ptr<spdlog::logger> m_consoleLogger;
 
-    LogManager();
+    LogManager() = default;
 
     int InternalInit();
 public:
@@ -20,6 +20,7 @@ public:
     inline static LogManager* GetInstance() { return m_instance; }
 
     static int Init();
+    static void Shutdown();
 
     std::shared_ptr<spdlog::logger> GetConsoleLogger();
 };

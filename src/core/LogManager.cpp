@@ -4,8 +4,6 @@
 
 LogManager* LogManager::m_instance = nullptr;
 
-LogManager::LogManager() {}
-
 int LogManager::InternalInit()
 {
     m_consoleLogger = spdlog::stdout_color_mt("SourEngine");
@@ -34,4 +32,9 @@ int LogManager::Init()
     return 0;
 }
 
-std::shared_ptr<spdlog::logger> LogManager::GetConsoleLogger() { return m_instance->m_consoleLogger; }
+void LogManager::Shutdown()
+{
+    delete m_instance;
+}
+
+std::shared_ptr<spdlog::logger> LogManager::GetConsoleLogger() { return m_consoleLogger; }

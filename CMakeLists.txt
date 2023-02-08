@@ -41,6 +41,14 @@ add_executable(SourEngine
     src/core/LogManager.h
     src/core/LogManager.cpp
 
+    src/core/resource/ResourceManager.h
+    src/core/resource/ResourceManager.tpp
+    src/core/resource/ResourceManager.cpp
+    src/core/resource/Resource.h
+    src/core/resource/Resource.cpp
+    src/core/resource/Image.h
+    src/core/resource/Image.cpp
+
     src/core/render/RenderManager.h
     src/core/render/RenderManager.cpp
     src/core/render/ShaderProgram.h

@@ -19,11 +19,12 @@ build/
 # Compiled binaries
 bin/
 
-# Dependency directories
-deps/*
-!deps/glad/
-# Bootstrapping utility
-!deps/bootstrap.json
-!deps/bootstrap.py
-!deps/LICENSE
-!deps/README.md
+# Dependencies
+deps/_archives/
+deps/.bootstrap.json
+# These will be bootstrapped later
+deps/glm/
+deps/imgui/**
+!deps/imgui/CMakeLists.txt
+deps/SDL2/
+deps/spdlog/

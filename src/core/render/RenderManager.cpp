@@ -9,10 +9,10 @@
 
 RenderManager* RenderManager::m_instance = nullptr;
 
-RenderManager::RenderManager() : m_window(nullptr) {}
-
 int RenderManager::InternalInit()
 {
+    m_window = nullptr;
+
     LOG_INFO("RenderManager initializing...");
 
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0)

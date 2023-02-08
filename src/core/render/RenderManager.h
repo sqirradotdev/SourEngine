@@ -32,7 +32,7 @@ private:
         GLuint batchEBO;
     } m_renderState2D;
 
-    RenderManager();
+    RenderManager() = default;
 
     int InternalInit();
     int Setup2D();

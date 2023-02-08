@@ -1,11 +1,14 @@
 #define SDL_MAIN_HANDLED
 
 #include <iostream>
+#include <memory>
 
 #include <SDL.h>
 #include <glad/glad.h>
 
 #include "core/LogManager.h"
+#include "core/resource/ResourceManager.h"
+#include "core/resource/Resource.h"
 #include "core/render/RenderManager.h"
 
 int main()
@@ -22,6 +25,13 @@ int main()
     {
         LOG_CRITICAL("SDL_Init Error: {0}", SDL_GetError());
         return 1;
+    }
+
+    if (ResourceManager::Init() != 0)
+        return 1;
+
+    {
+        std::shared_ptr<Resource> test = ResourceManager::GetInstance()->MakeResource<Resource>();
     }
 
     if (RenderManager::Init() != 0)
@@ -48,9 +58,11 @@ int main()
     }
 
     RenderManager::Shutdown();
+    ResourceManager::Shutdown();
     SDL_Quit();
 
     LOG_INFO("Goodbye!");
+    LogManager::Shutdown();
 
     return 0;
 }
