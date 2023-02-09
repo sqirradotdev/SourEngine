@@ -2,11 +2,11 @@
 
 #include <string>
 
-#include "ResourceManager.h"
+class ResourceManager;
 
 class Resource
 {
-private:
+protected:
     friend class ResourceManager;
 
     unsigned int m_id;

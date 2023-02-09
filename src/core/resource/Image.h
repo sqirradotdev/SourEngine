@@ -2,7 +2,9 @@
 
 #include "Resource.h"
 
-class Image : Resource
+class Image : public Resource
 {
-
+public:
+    Image();
+    virtual ~Image();
 };

@@ -4,8 +4,7 @@
 #include <unordered_map>
 
 #include "../LogManager.h"
-
-class Resource;
+#include "Resource.h"
 
 class ResourceManager
 {

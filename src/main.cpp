@@ -9,6 +9,7 @@
 #include "core/LogManager.h"
 #include "core/resource/ResourceManager.h"
 #include "core/resource/Resource.h"
+#include "core/resource/Image.h"
 #include "core/render/RenderManager.h"
 
 int main()
@@ -31,7 +32,7 @@ int main()
         return 1;
 
     {
-        std::shared_ptr<Resource> test = ResourceManager::GetInstance()->MakeResource<Resource>();
+        std::shared_ptr<Image> test = ResourceManager::GetInstance()->MakeResource<Image>();
     }
 
     if (RenderManager::Init() != 0)

@@ -2,7 +2,7 @@
 
 #include "../LogManager.h"
 
-Resource::Resource() : m_path("blah")
+Resource::Resource() : m_path("")
 {
     LOG_INFO("aodsjaosjas");
 }
