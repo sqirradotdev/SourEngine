@@ -2,9 +2,7 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-MANAGER_DEFINITION(LogManager)
-
-Error LogManager::InternalInit()
+LogManager::LogManager()
 {
 #ifdef NDEBUG
     spdlog::set_level(spdlog::level::info);
@@ -14,8 +12,6 @@ Error LogManager::InternalInit()
     m_consoleLogger = spdlog::stdout_color_mt("SourEngine");
 
     spdlog::set_pattern("%^[%T] [%L] %v%$");
-
-    return OK;
 }
 
 LogManager::~LogManager() {}

@@ -7,7 +7,7 @@
 #include "../LogManager.h"
 #include "Resource.h"
 
-class ResourceManager : public Manager<ResourceManager>
+class ResourceManager
 {
 MANAGER_DECLARATION(ResourceManager)
 private:

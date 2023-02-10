@@ -13,33 +13,18 @@
 
 int main()
 {
-    if (LogManager::Init() != OK)
-        return 1;
+    LogManager::Instance();
 
     LOG_INFO("Welcome to SourEngine!");
 #ifndef NDEBUG
     LOG_WARN("You are running a debug build, expect crashes and performance degrades :)");
 #endif
 
-    LOG_INFO("SDL initializing...");
-    if (SDL_Init(SDL_INIT_EVENTS) != 0)
-    {
-        LOG_CRITICAL("SDL_Init Error: {0}", SDL_GetError());
-        return 1;
-    }
-
     LOG_INFO("ResourceManager initializing...");
-    if (ResourceManager::Init() != OK)
-        return 1;
-
-    {
-        std::shared_ptr<Image> testImage = ResourceManager::GetInstance()->CreateResource<Image>();
-        testImage->LoadFromFile("./res/textures/placeholder.png");
-    }
+    ResourceManager::Instance();
 
     LOG_INFO("RenderManager initializing...");
-    if (RenderManager::Init() != OK)
-        return 1;
+    RenderManager::Instance();
 
     bool running = true;
     while (running)
@@ -51,25 +36,19 @@ int main()
                 running = false;
         }
 
-        RenderManager::GetInstance()->Clear();
-        RenderManager::GetInstance()->Begin2D();
-        RenderManager::GetInstance()->DrawRect(10, 10, 100, 100);
-        RenderManager::GetInstance()->DrawRect(10, 120, 120, 100);
-        RenderManager::GetInstance()->DrawRect(10, 230, 140, 100);
-        RenderManager::GetInstance()->DrawRect(10, 340, 160, 100);
-        RenderManager::GetInstance()->End2D();
-        RenderManager::GetInstance()->Present();
+        RenderManager::Instance().Clear();
+        RenderManager::Instance().Begin2D();
+        RenderManager::Instance().DrawRect(10, 10, 100, 100);
+        RenderManager::Instance().DrawRect(10, 120, 120, 100);
+        RenderManager::Instance().DrawRect(10, 230, 140, 100);
+        RenderManager::Instance().DrawRect(10, 340, 160, 100);
+        RenderManager::Instance().End2D();
+        RenderManager::Instance().Present();
     }
 
-    LOG_INFO("RenderManager shutting down...");
-    RenderManager::Shutdown();
-    LOG_INFO("ResourceManager shutting down...");
-    ResourceManager::Shutdown();
-    LOG_INFO("SDL shutting down...");
-    SDL_Quit();
+    LOG_INFO("Cleaning up...");
 
-    LOG_INFO("Goodbye!");
-    LogManager::Shutdown();
+    SDL_Quit();
 
     return 0;
 }

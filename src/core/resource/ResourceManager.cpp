@@ -3,13 +3,9 @@
 #include "../LogManager.h"
 #include "Resource.h"
 
-MANAGER_DEFINITION(ResourceManager)
-
-Error ResourceManager::InternalInit()
+ResourceManager::ResourceManager()
 {
     m_nextId = 0;
-
-    return OK;
 }
 
 ResourceManager::~ResourceManager()

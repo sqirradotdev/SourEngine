@@ -1,24 +1,23 @@
 #include "RenderManager.h"
 
 #include <iostream>
+#include <exception>
 #include <queue>
 #include <glad/glad.h>
 #include <glm/ext/matrix_clip_space.hpp>
 
 #include "../LogManager.h"
 
-MANAGER_DEFINITION(RenderManager)
-
-Error RenderManager::InternalInit()
+RenderManager::RenderManager()
 {
     m_window = nullptr;
 
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0)
-        return FAILED;
+        throw "Failed to initialize SDL2 video subsystem.";
 
     m_window = SDL_CreateWindow("SDL2 Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_OPENGL);
     if (m_window == nullptr)
-        return FAILED;
+        throw "Failed to create SDL2 window.";
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -26,12 +25,16 @@ Error RenderManager::InternalInit()
 
     SDL_GLContext glContext = SDL_GL_CreateContext(m_window);
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
-        return FAILED;
+        throw "Failed to initialize OpenGL context.";
 
     if (!Setup2D())
-        return FAILED;
+        throw "Failed to setup 2D rendering.";
+}
 
-    return OK;
+RenderManager::~RenderManager()
+{
+    SDL_DestroyWindow(m_window);
+    SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
 bool RenderManager::Setup2D()
@@ -89,12 +92,6 @@ void main()
     m_renderState2D.projectionMatrix = glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f, -1.0f, 1.0f);
 
     return true;
-}
-
-RenderManager::~RenderManager()
-{
-    SDL_DestroyWindow(m_window);
-    SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
 SDL_Window *RenderManager::GetWindow() const { return m_window; }

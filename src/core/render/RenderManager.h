@@ -12,7 +12,7 @@
 /**
  * @brief Low level rendering manager.
 */
-class RenderManager : public Manager<RenderManager>
+class RenderManager
 {
 MANAGER_DECLARATION(RenderManager)
 private:

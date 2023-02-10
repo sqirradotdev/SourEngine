@@ -11,7 +11,7 @@
 
 #include "Manager.h"
 
-class LogManager : public Manager<LogManager>
+class LogManager
 {
 MANAGER_DECLARATION(LogManager)
 private:
