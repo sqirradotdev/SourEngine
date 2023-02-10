@@ -17,7 +17,10 @@
 build/
 
 # Compiled binaries
-bin/
+bin/*
+
+# Resources
+!bin/res/
 
 # Dependencies
 deps/_archives/
