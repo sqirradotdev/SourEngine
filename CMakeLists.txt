@@ -39,6 +39,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEA
 add_executable(SourEngine
     src/main.cpp
 
+    src/core/Manager.h
+    src/core/Manager.tpp
+
     src/core/LogManager.h
     src/core/LogManager.cpp
 

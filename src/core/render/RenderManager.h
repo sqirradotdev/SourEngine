@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <glm/mat4x4.hpp>
 
+#include "../Manager.h"
 #include "ShaderProgram.h"
 
 #define RECT_BATCH_LIMIT 512
@@ -11,11 +12,10 @@
 /**
  * @brief Low level rendering manager.
 */
-class RenderManager
+class RenderManager : public Manager<RenderManager>
 {
+MANAGER_DECLARATION(RenderManager)
 private:
-    static RenderManager* m_instance;
-
     SDL_Window* m_window;
     SDL_GLContext m_glContext;
 
@@ -32,30 +32,8 @@ private:
         GLuint batchEBO;
     } m_renderState2D;
 
-    RenderManager() = default;
-
-    int InternalInit();
-    int Setup2D();
+    bool Setup2D();
 public:
-    ~RenderManager();
-
-    /**
-     * @brief Get the instance of the RenderManager.
-     * @return The instance of the RenderManager.
-    */
-    inline static RenderManager* GetInstance() { return m_instance; }
-
-    /**
-     * @brief Initialize the RenderManager.
-     * @return 0 if successful, 1 otherwise.
-    */
-    static int Init();
-
-    /**
-     * @brief Shutdown the RenderManager.
-    */
-    static void Shutdown();
-
     /**
      * @brief Get the SDL window handle.
      * @return The SDL window handle.

@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <memory>
-
 #include <SDL.h>
 #include <glad/glad.h>
 
@@ -14,7 +13,7 @@
 
 int main()
 {
-    if (LogManager::Init() != 0)
+    if (LogManager::Init() != OK)
         return 1;
 
     LOG_INFO("Welcome to SourEngine!");
@@ -22,20 +21,24 @@ int main()
     LOG_WARN("You are running a debug build, expect crashes and performance degrades :)");
 #endif
 
+    LOG_INFO("SDL initializing...");
     if (SDL_Init(SDL_INIT_EVENTS) != 0)
     {
         LOG_CRITICAL("SDL_Init Error: {0}", SDL_GetError());
         return 1;
     }
 
-    if (ResourceManager::Init() != 0)
+    LOG_INFO("ResourceManager initializing...");
+    if (ResourceManager::Init() != OK)
         return 1;
 
     {
-        std::shared_ptr<Image> test = ResourceManager::GetInstance()->MakeResource<Image>();
+        std::shared_ptr<Image> testImage = ResourceManager::GetInstance()->CreateResource<Image>();
+        testImage->LoadFromFile("./res/textures/placeholder.png");
     }
 
-    if (RenderManager::Init() != 0)
+    LOG_INFO("RenderManager initializing...");
+    if (RenderManager::Init() != OK)
         return 1;
 
     bool running = true;
@@ -58,8 +61,11 @@ int main()
         RenderManager::GetInstance()->Present();
     }
 
+    LOG_INFO("RenderManager shutting down...");
     RenderManager::Shutdown();
+    LOG_INFO("ResourceManager shutting down...");
     ResourceManager::Shutdown();
+    LOG_INFO("SDL shutting down...");
     SDL_Quit();
 
     LOG_INFO("Goodbye!");

@@ -11,9 +11,10 @@ protected:
 
     unsigned int m_id;
     std::string m_path;
-public:
+
     Resource();
-    virtual ~Resource();
+public:
+    virtual ~Resource() = 0;
 
     unsigned int GetID();
 };

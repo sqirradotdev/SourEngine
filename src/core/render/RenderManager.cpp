@@ -7,20 +7,18 @@
 
 #include "../LogManager.h"
 
-RenderManager* RenderManager::m_instance = nullptr;
+MANAGER_DEFINITION(RenderManager)
 
-int RenderManager::InternalInit()
+Error RenderManager::InternalInit()
 {
     m_window = nullptr;
 
-    LOG_INFO("RenderManager initializing...");
-
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0)
-        return 1;
+        return FAILED;
 
     m_window = SDL_CreateWindow("SDL2 Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_OPENGL);
     if (m_window == nullptr)
-        return 1;
+        return FAILED;
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -28,14 +26,15 @@ int RenderManager::InternalInit()
 
     SDL_GLContext glContext = SDL_GL_CreateContext(m_window);
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
-        return 1;
+        return FAILED;
 
-    Setup2D();
+    if (!Setup2D())
+        return FAILED;
 
-    return 0;
+    return OK;
 }
 
-int RenderManager::Setup2D()
+bool RenderManager::Setup2D()
 {
     m_renderState2D.batchVBO = 0;
     m_renderState2D.batchVBO = 0;
@@ -59,6 +58,8 @@ void main()
 #version 330 core
 
 out vec4 fragColor;
+
+uniform sampler2D texture;
 
 void main()
 {
@@ -87,37 +88,12 @@ void main()
 
     m_renderState2D.projectionMatrix = glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f, -1.0f, 1.0f);
 
-    return 0;
+    return true;
 }
 
 RenderManager::~RenderManager()
 {
-    LOG_INFO("RenderManager shutting down...");
-
     SDL_DestroyWindow(m_window);
-    SDL_QuitSubSystem(SDL_INIT_VIDEO);
-}
-
-int RenderManager::Init()
-{
-    if (m_instance != nullptr)
-        return 1;
-
-    m_instance = new RenderManager();
-    if (m_instance->InternalInit() != 0)
-    {
-        delete m_instance;
-
-        LOG_CRITICAL("Failed to initialize RenderManager!");
-        return 1;
-    }
-
-    return 0;
-}
-
-void RenderManager::Shutdown()
-{
-    delete m_instance;
     SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 

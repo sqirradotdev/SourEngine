@@ -2,14 +2,8 @@
 
 #include "../LogManager.h"
 
-Resource::Resource() : m_path("")
-{
-    LOG_INFO("aodsjaosjas");
-}
+Resource::Resource() : m_path("") {}
 
-Resource::~Resource()
-{
-    LOG_INFO("gosgosgos");
-}
+Resource::~Resource() = default;
 
 unsigned int Resource::GetID() { return m_id; }
