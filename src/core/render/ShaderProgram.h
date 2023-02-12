@@ -2,7 +2,6 @@
 
 #include <string>
 #include <unordered_map>
-
 #include <glad/glad.h>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -28,7 +27,7 @@ public:
 
     ShaderProgram();
     ShaderProgram(const char* vertexShaderSource, const char* fragmentShaderSource);
-    ShaderProgram(std::string& vertexShaderSource, std::string& fragmentShaderSource);
+    ShaderProgram(const std::string& vertexShaderSource, const std::string& fragmentShaderSource);
     ~ShaderProgram();
 
     /**

@@ -18,3 +18,10 @@ public:
 
     unsigned int GetID();
 };
+
+#define RESOURCE_DECLARATION(Class) \
+protected: \
+    friend class ResourceManager; \
+    Class(); \
+public: \
+    virtual ~Class();

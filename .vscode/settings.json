@@ -81,6 +81,25 @@
         "*.rh": "cpp",
         "cstdarg": "cpp",
         "deque": "cpp",
-        "*.tpp": "cpp"
+        "*.tpp": "cpp",
+        "__bit_reference": "cpp",
+        "__bits": "cpp",
+        "__debug": "cpp",
+        "__errc": "cpp",
+        "__hash_table": "cpp",
+        "__locale": "cpp",
+        "__mutex_base": "cpp",
+        "__node_handle": "cpp",
+        "__split_buffer": "cpp",
+        "__std_stream": "cpp",
+        "__string": "cpp",
+        "__threading_support": "cpp",
+        "__tuple": "cpp",
+        "bitset": "cpp",
+        "complex": "cpp",
+        "cwctype": "cpp",
+        "stack": "cpp",
+        "string_view": "cpp",
+        "variant": "cpp"
     }
 }

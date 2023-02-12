@@ -1,13 +1,15 @@
 #pragma once
 
+#include <memory>
 #include <SDL.h>
 #include <glm/mat4x4.hpp>
 
 #include "../Manager.h"
 #include "ShaderProgram.h"
+#include "../resource/Texture.h"
 
 #define RECT_BATCH_LIMIT 512
-#define BATCH_BUFFER_SIZE RECT_BATCH_LIMIT * 3 * 4
+#define BATCH_BUFFER_SIZE RECT_BATCH_LIMIT * 4 * 4
 
 /**
  * @brief Low level rendering manager.
@@ -30,7 +32,7 @@ private:
         GLuint batchVAO;
         GLuint batchVBO;
         GLuint batchEBO;
-    } m_renderState2D;
+    } m_rectBatch;
 
     bool Setup2D();
 public:
@@ -52,10 +54,10 @@ public:
      * @param shaderProgramID The shader program to use.
      * @param count The number of vertices to draw.
     */
-    void Draw(unsigned int VAO, unsigned int shaderProgramID, unsigned int count);
+    void Draw(GLuint VAO, GLuint shaderProgramID, GLuint count);
 
     void Begin2D();
-    void DrawRect(float x, float y, float width, float height);
+    void DrawRect(float x, float y, float width, float height, std::shared_ptr<Texture> texture = nullptr, float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f);
     void End2D();
 
     /**

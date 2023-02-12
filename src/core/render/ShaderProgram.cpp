@@ -10,7 +10,7 @@ ShaderProgram::ShaderProgram() : m_programID(0), m_programCompiled(false) {}
 ShaderProgram::ShaderProgram(const char *vertexShaderSource, const char *fragmentShaderSource)
     : vertexShaderSource(vertexShaderSource), fragmentShaderSource(fragmentShaderSource) {}
 
-ShaderProgram::ShaderProgram(std::string& vertexShaderSource, std::string& fragmentShaderSource)
+ShaderProgram::ShaderProgram(const std::string& vertexShaderSource, const std::string& fragmentShaderSource)
     : vertexShaderSource(vertexShaderSource), fragmentShaderSource(fragmentShaderSource) {}
 
 ShaderProgram::~ShaderProgram()

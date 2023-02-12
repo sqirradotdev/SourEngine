@@ -10,6 +10,8 @@
 
 RenderManager::RenderManager()
 {
+    LOG_INFO("RenderManager initializing...");
+
     m_window = nullptr;
 
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0)
@@ -33,32 +35,49 @@ RenderManager::RenderManager()
 
 RenderManager::~RenderManager()
 {
+    LOG_INFO("RenderManager shutting down...");
+
     SDL_DestroyWindow(m_window);
     SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
 bool RenderManager::Setup2D()
 {
-    m_renderState2D.batchVBO = 0;
-    m_renderState2D.batchVBO = 0;
-    m_renderState2D.batchEBO = 0;
-    m_renderState2D.batchBufferIndex = 0;
-    m_renderState2D.batchIndicesBufferIndex = 0;
+    m_rectBatch.batchVBO = 0;
+    m_rectBatch.batchVBO = 0;
+    m_rectBatch.batchEBO = 0;
+    m_rectBatch.batchBufferIndex = 0;
+    m_rectBatch.batchIndicesBufferIndex = 0;
 
-    m_renderState2D.shaderProgram.vertexShaderSource = R"(
+    m_rectBatch.shaderProgram.vertexShaderSource =
+
+R"(
 #version 330 core
 
-layout (location = 0) in vec3 aPos;
+layout (location = 0) in vec2 pos;
+layout (location = 1) in vec4 vertVColor;
+layout (location = 2) in vec2 vertUV;
+
+out vec4 fragVColor;
+out vec2 fragUV;
 
 uniform mat4 projection;
 
 void main()
 {
-    gl_Position = projection * vec4(aPos.x, aPos.y, aPos.z, 1.0);
+    gl_Position = projection * vec4(pos.x, pos.y, 0.0f, 1.0);
+    fragVColor = vertVColor;
+    fragUV = vertUV;
 }
-    )";
-    m_renderState2D.shaderProgram.fragmentShaderSource = R"(
+)";
+
+    m_rectBatch.shaderProgram.fragmentShaderSource =
+
+R"(
 #version 330 core
+
+in vec4 fragVColor;
+in vec2 fragUV;
 
 out vec4 fragColor;
 
@@ -66,30 +85,40 @@ uniform sampler2D texture;
 
 void main()
 {
-    fragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    fragColor = fragVColor;
 }
-    )";
-    m_renderState2D.shaderProgram.Compile();
+)";
 
-    glGenVertexArrays(1, &m_renderState2D.batchVAO);
-    glGenBuffers(1, &m_renderState2D.batchVBO);
+    m_rectBatch.shaderProgram.Compile();
 
-    glBindVertexArray(m_renderState2D.batchVAO);
+    glGenVertexArrays(1, &m_rectBatch.batchVAO);
+    glGenBuffers(1, &m_rectBatch.batchVBO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_renderState2D.batchVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(m_renderState2D.batchBuffer), nullptr, GL_DYNAMIC_DRAW);
+    glBindVertexArray(m_rectBatch.batchVAO);
 
+    glBindBuffer(GL_ARRAY_BUFFER, m_rectBatch.batchVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(m_rectBatch.batchBuffer), nullptr, GL_DYNAMIC_DRAW);
+
+    // position
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)0);
 
-    glGenBuffers(1, &m_renderState2D.batchEBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderState2D.batchEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_renderState2D.batchIndicesBuffer), nullptr, GL_DYNAMIC_DRAW);
+    // color
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+
+    // uv
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
+
+    glGenBuffers(1, &m_rectBatch.batchEBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rectBatch.batchEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_rectBatch.batchIndicesBuffer), nullptr, GL_DYNAMIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    m_renderState2D.projectionMatrix = glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f, -1.0f, 1.0f);
+    m_rectBatch.projectionMatrix = glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f, -1.0f, 1.0f);
 
     return true;
 }
@@ -99,7 +128,7 @@ SDL_Window *RenderManager::GetWindow() const { return m_window; }
 SDL_GLContext RenderManager::GetGLContext() const { return SDL_GLContext(); }
 
 // TODO: make this useful again
-void RenderManager::Draw(unsigned int VAO, unsigned int shaderProgramID, unsigned int count)
+void RenderManager::Draw(GLuint VAO, GLuint shaderProgramID, GLuint count)
 {
     glUseProgram(shaderProgramID);
     glBindVertexArray(VAO);
@@ -108,43 +137,44 @@ void RenderManager::Draw(unsigned int VAO, unsigned int shaderProgramID, unsigne
 
 void RenderManager::Begin2D()
 {
-    m_renderState2D.batchBufferIndex = 0;
-    m_renderState2D.batchIndicesBufferIndex = 0;
+    m_rectBatch.batchBufferIndex = 0;
+    m_rectBatch.batchIndicesBufferIndex = 0;
 }
 
-void RenderManager::DrawRect(float x, float y, float width, float height)
+void RenderManager::DrawRect(float x, float y, float width, float height, std::shared_ptr<Texture> texture, float r, float g, float b, float a)
 {
-    float vertices[] = {
-        x        , y         , 0.0f,
-        x + width, y         , 0.0f,
-        x + width, y + height, 0.0f,
-        x        , y + height, 0.0f
+    // position (xy), color (rgb), uv
+    GLfloat buffer[] = {
+        x        , y         , r, g, b, a, 0.0f, 0.0f,
+        x + width, y         , r, g, b, a, 1.0f, 0.0f,
+        x + width, y + height, r, g, b, a, 1.0f, 1.0f,
+        x        , y + height, r, g, b, a, 0.0f, 1.0f
     };
 
-    unsigned int indices[] = {
+    GLuint indices[] = {
         0, 1, 2,
         0, 2, 3
     };
 
-    for (int i = 0; i < 12; i++)
-        m_renderState2D.batchBuffer[m_renderState2D.batchBufferIndex++] = vertices[i];
+    for (int i = 0; i < 32; i++)
+        m_rectBatch.batchBuffer[m_rectBatch.batchBufferIndex++] = buffer[i];
 
-    unsigned int offset = m_renderState2D.batchIndicesBufferIndex / 6 * 4;
+    GLuint offset = m_rectBatch.batchIndicesBufferIndex / 6 * 4;
     for (int i = 0; i < 6; i++)
-        m_renderState2D.batchIndicesBuffer[m_renderState2D.batchIndicesBufferIndex++] = indices[i] + offset;
+        m_rectBatch.batchIndicesBuffer[m_rectBatch.batchIndicesBufferIndex++] = indices[i] + offset;
 }
 
 void RenderManager::End2D()
 {
-    glBindVertexArray(m_renderState2D.batchVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, m_renderState2D.batchVBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, m_renderState2D.batchBufferIndex * sizeof(GLfloat), m_renderState2D.batchBuffer);
+    glBindVertexArray(m_rectBatch.batchVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_rectBatch.batchVBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, m_rectBatch.batchBufferIndex * sizeof(GLfloat), m_rectBatch.batchBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_renderState2D.batchIndicesBufferIndex * sizeof(GLuint), m_renderState2D.batchIndicesBuffer);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_rectBatch.batchIndicesBufferIndex * sizeof(GLuint), m_rectBatch.batchIndicesBuffer);
 
-    glUseProgram(m_renderState2D.shaderProgram.GetProgramID());
-    m_renderState2D.shaderProgram.SetUniform("projection", m_renderState2D.projectionMatrix);
-    glDrawElements(GL_TRIANGLES, m_renderState2D.batchIndicesBufferIndex, GL_UNSIGNED_INT, 0);
+    glUseProgram(m_rectBatch.shaderProgram.GetProgramID());
+    m_rectBatch.shaderProgram.SetUniform("projection", m_rectBatch.projectionMatrix);
+    glDrawElements(GL_TRIANGLES, m_rectBatch.batchIndicesBufferIndex, GL_UNSIGNED_INT, 0);
 }
 
 void RenderManager::Clear()

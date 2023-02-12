@@ -1,12 +1,16 @@
 #pragma once
 
+#include <string>
+#include <glad/glad.h>
+
 #include "Resource.h"
-#include "../util/Error.h"
+#include "../Error.h"
 
 class ResourceManager;
 
-class Image : public Resource
+class Texture : public Resource
 {
+RESOURCE_DECLARATION(Texture)
 public:
     enum Format
     {
@@ -17,13 +21,12 @@ public:
 private:
     friend class ResourceManager;
 
-    int m_width, m_height;
+    unsigned int m_width;
+    unsigned int m_height;
     Format m_format;
-    unsigned char* m_data;
+    GLuint m_textureHandle;
 
-    Image();
+    bool m_initialized;
 public:
-    virtual ~Image();
-
     Error LoadFromFile(const std::string& path);
 };

@@ -8,7 +8,7 @@
 #include "core/LogManager.h"
 #include "core/resource/ResourceManager.h"
 #include "core/resource/Resource.h"
-#include "core/resource/Image.h"
+#include "core/resource/Texture.h"
 #include "core/render/RenderManager.h"
 
 int main()
@@ -20,11 +20,12 @@ int main()
     LOG_WARN("You are running a debug build, expect crashes and performance degrades :)");
 #endif
 
-    LOG_INFO("ResourceManager initializing...");
     ResourceManager::Instance();
-
-    LOG_INFO("RenderManager initializing...");
     RenderManager::Instance();
+
+    {
+        auto test = ResourceManager::Instance().CreateResource<Texture>();
+    }
 
     bool running = true;
     while (running)
@@ -38,10 +39,10 @@ int main()
 
         RenderManager::Instance().Clear();
         RenderManager::Instance().Begin2D();
-        RenderManager::Instance().DrawRect(10, 10, 100, 100);
-        RenderManager::Instance().DrawRect(10, 120, 120, 100);
-        RenderManager::Instance().DrawRect(10, 230, 140, 100);
-        RenderManager::Instance().DrawRect(10, 340, 160, 100);
+        RenderManager::Instance().DrawRect(700, 10, 200, 200, nullptr, 1.0f, 0.0f, 0.0f);
+        RenderManager::Instance().DrawRect(120, 50, 300, 150, nullptr, 1.0f, 1.0f, 0.0f);
+        RenderManager::Instance().DrawRect(300, 300, 200, 250, nullptr, 1.0f, 0.0f, 1.0f);
+        RenderManager::Instance().DrawRect(600, 340, 160, 100, nullptr, 0.0f, 1.0f, 1.0f);
         RenderManager::Instance().End2D();
         RenderManager::Instance().Present();
     }

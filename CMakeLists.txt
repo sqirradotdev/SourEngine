@@ -39,9 +39,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEA
 add_executable(SourEngine
     src/main.cpp
 
+    src/core/Error.h
+    src/core/Color.h
+    src/core/Color.cpp
     src/core/Manager.h
-    src/core/Manager.tpp
-
     src/core/LogManager.h
     src/core/LogManager.cpp
 
@@ -50,16 +51,13 @@ add_executable(SourEngine
     src/core/resource/ResourceManager.cpp
     src/core/resource/Resource.h
     src/core/resource/Resource.cpp
-    src/core/resource/Image.h
-    src/core/resource/Image.cpp
+    src/core/resource/Texture.h
+    src/core/resource/Texture.cpp
 
     src/core/render/RenderManager.h
     src/core/render/RenderManager.cpp
     src/core/render/ShaderProgram.h
     src/core/render/ShaderProgram.cpp
-
-    src/core/util/Types.h
-    src/core/util/Error.h
 )
 
 if(TARGET SDL2::SDL2main)

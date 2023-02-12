@@ -10,10 +10,12 @@ LogManager::LogManager()
     spdlog::set_level(spdlog::level::trace);
 #endif
     m_consoleLogger = spdlog::stdout_color_mt("SourEngine");
-
     spdlog::set_pattern("%^[%T] [%L] %v%$");
 }
 
-LogManager::~LogManager() {}
+LogManager::~LogManager()
+{
+    LOG_INFO("LogManager shutting down...");
+}
 
 std::shared_ptr<spdlog::logger> LogManager::GetConsoleLogger() { return m_consoleLogger; }
