@@ -4,7 +4,7 @@
 #include "Resource.h"
 #include "Texture.h"
 
-ResourceManager::ResourceManager()
+void ResourceManager::Init()
 {
     LOG_INFO("ResourceManager initializing...");
 

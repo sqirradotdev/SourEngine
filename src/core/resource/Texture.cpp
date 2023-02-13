@@ -4,12 +4,12 @@
 
 #include "../LogManager.h"
 
-Texture::Texture() : m_width(0), m_height(0), m_textureHandle(0) {}
+Texture::Texture() : m_width(0), m_height(0), m_textureID(0) {}
 
 Texture::~Texture()
 {
     if (m_initialized)
-        glDeleteTextures(1, &m_textureHandle);
+        glDeleteTextures(1, &m_textureID);
 }
 
 Error Texture::LoadFromFile(const std::string &path)
@@ -40,15 +40,20 @@ Error Texture::LoadFromFile(const std::string &path)
 
     m_path = path;
 
-    glGenTextures(1, &m_textureHandle);
-    glBindTexture(GL_TEXTURE_2D, m_textureHandle);
+    glGenTextures(1, &m_textureID);
+    glBindTexture(GL_TEXTURE_2D, m_textureID);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     GLint format;
     if (m_format == RGB)
         format = GL_RGB;
     else if (m_format == RGBA)
         format = GL_RGBA;
     glTexImage2D(GL_TEXTURE_2D, 0, format, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, data);
-    glBindTexture(GL_TEXTURE_2D, 0);
+
+    stbi_image_free(data);
 
     m_initialized = true;
 

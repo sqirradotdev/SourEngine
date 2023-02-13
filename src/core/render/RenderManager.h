@@ -5,6 +5,7 @@
 #include <glm/mat4x4.hpp>
 
 #include "../Manager.h"
+#include "../Error.h"
 #include "ShaderProgram.h"
 #include "../resource/Texture.h"
 
@@ -19,7 +20,7 @@ class RenderManager
 MANAGER_DECLARATION(RenderManager)
 private:
     SDL_Window* m_window;
-    SDL_GLContext m_glContext;
+    SDL_GLContext m_glContext;   
 
     struct
     {
@@ -32,9 +33,12 @@ private:
         GLuint batchVAO;
         GLuint batchVBO;
         GLuint batchEBO;
-    } m_rectBatch;
+    } m_batched2DState;
 
-    bool Setup2D();
+    GLuint m_currentShaderProgram;
+    std::shared_ptr<Texture> m_currentTexture;
+
+    bool SetupBatched2D();
 public:
     /**
      * @brief Get the SDL window handle.
@@ -56,9 +60,12 @@ public:
     */
     void Draw(GLuint VAO, GLuint shaderProgramID, GLuint count);
 
-    void Begin2D();
-    void DrawRect(float x, float y, float width, float height, std::shared_ptr<Texture> texture = nullptr, float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f);
-    void End2D();
+    Error UseShader(const ShaderProgram& shader);
+    Error UseTexture(std::shared_ptr<Texture> texture);
+
+    void BeginBatched2D();
+    void DrawBatchedRect(float x, float y, float width, float height, float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f);
+    void EndBatched2D();
 
     /**
      * @brief Clear the screen.

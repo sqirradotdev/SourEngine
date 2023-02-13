@@ -4,6 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../LogManager.h"
+#include "RenderManager.h"
 
 ShaderProgram::ShaderProgram() : m_programID(0), m_programCompiled(false) {}
 
@@ -87,6 +88,14 @@ GLuint ShaderProgram::GetProgramID() const { return m_programID; }
 
 GLuint ShaderProgram::GetUniformLocation(const std::string& name)
 {
+    if (!m_programCompiled)
+    {
+        LOG_ERROR("Cannot get uniform location as the shader is not compiled!");
+        return 0;
+    }
+
+    RenderManager::Instance().UseShader(*this);
+
     auto it = m_uniformCache.find(name);
     if (it != m_uniformCache.end())
         return it->second;
@@ -96,37 +105,51 @@ GLuint ShaderProgram::GetUniformLocation(const std::string& name)
     return location;
 }
 
+#define CHECK_IF_INITIALIZED() \
+if (!m_programCompiled) \
+{ \
+    LOG_ERROR("Cannot set uniform as the shader is not compiled!"); \
+    return; \
+} \
+
 void ShaderProgram::SetUniform(const std::string &name, int value)
 {
+    CHECK_IF_INITIALIZED()
     glUniform1i(GetUniformLocation(name), value);
 }
 
 void ShaderProgram::SetUniform(const std::string &name, float value)
 {
+    CHECK_IF_INITIALIZED()
     glUniform1f(GetUniformLocation(name), value);
 }
 
 void ShaderProgram::SetUniform(const std::string& name, float v0, float v1)
 {
+    CHECK_IF_INITIALIZED()
     glUniform2f(GetUniformLocation(name), v0, v1);
 }
 
 void ShaderProgram::SetUniform(const std::string& name, glm::vec2& value)
 {
+    CHECK_IF_INITIALIZED()
     SetUniform(name, value.x, value.y);
 }
 
 void ShaderProgram::SetUniform(const std::string& name, float v0, float v1, float v2)
 {
+    CHECK_IF_INITIALIZED()
     glUniform3f(GetUniformLocation(name), v0, v1, v2);
 }
 
 void ShaderProgram::SetUniform(const std::string& name, glm::vec3& value)
 {
+    CHECK_IF_INITIALIZED()
     SetUniform(name, value.x, value.y, value.z);
 }
 
 void ShaderProgram::SetUniform(const std::string& name, glm::mat4& value)
 {
+    CHECK_IF_INITIALIZED()
     glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 }

@@ -13,19 +13,18 @@
 
 int main()
 {
-    LogManager::Instance();
+    LogManager::Instance().Init();
 
     LOG_INFO("Welcome to SourEngine!");
 #ifndef NDEBUG
     LOG_WARN("You are running a debug build, expect crashes and performance degrades :)");
 #endif
 
-    ResourceManager::Instance();
-    RenderManager::Instance();
+    ResourceManager::Instance().Init();
+    RenderManager::Instance().Init();
 
-    {
-        auto test = ResourceManager::Instance().CreateResource<Texture>();
-    }
+    auto test = ResourceManager::Instance().LoadTexture("./res/textures/placeholder.png");
+    RenderManager::Instance().UseTexture(test);
 
     bool running = true;
     while (running)
@@ -38,12 +37,12 @@ int main()
         }
 
         RenderManager::Instance().Clear();
-        RenderManager::Instance().Begin2D();
-        RenderManager::Instance().DrawRect(700, 10, 200, 200, nullptr, 1.0f, 0.0f, 0.0f);
-        RenderManager::Instance().DrawRect(120, 50, 300, 150, nullptr, 1.0f, 1.0f, 0.0f);
-        RenderManager::Instance().DrawRect(300, 300, 200, 250, nullptr, 1.0f, 0.0f, 1.0f);
-        RenderManager::Instance().DrawRect(600, 340, 160, 100, nullptr, 0.0f, 1.0f, 1.0f);
-        RenderManager::Instance().End2D();
+        RenderManager::Instance().BeginBatched2D();
+        RenderManager::Instance().DrawBatchedRect(700, 10, 200, 200, 1.0f, 0.0f, 0.0f);
+        RenderManager::Instance().DrawBatchedRect(120, 50, 300, 150, 1.0f, 1.0f, 0.0f);
+        RenderManager::Instance().DrawBatchedRect(300, 300, 200, 250, 1.0f, 0.0f, 1.0f);
+        RenderManager::Instance().DrawBatchedRect(600, 340, 160, 100, 0.0f, 1.0f, 1.0f);
+        RenderManager::Instance().EndBatched2D();
         RenderManager::Instance().Present();
     }
 

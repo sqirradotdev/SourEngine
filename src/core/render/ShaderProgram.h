@@ -7,9 +7,13 @@
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
+class RenderManager;
+
 class ShaderProgram
 {
 private:
+    friend class RenderManager;
+
     GLuint m_programID;
     bool m_programCompiled;
 

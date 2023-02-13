@@ -9,7 +9,8 @@ public: \
         static Class instance; \
         return instance; \
     } \
-    Class(); \
+    Class() = default; \
+    void Init(); \
     ~Class(); \
     Class(const Class&) = delete; \
     Class& operator = (const Class&) = delete; \

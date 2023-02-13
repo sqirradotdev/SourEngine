@@ -6,7 +6,7 @@
 #include "Resource.h"
 #include "../Error.h"
 
-class ResourceManager;
+class RenderManager;
 
 class Texture : public Resource
 {
@@ -19,12 +19,12 @@ public:
         RGBA
     };
 private:
-    friend class ResourceManager;
+    friend class RenderManager;
 
     unsigned int m_width;
     unsigned int m_height;
     Format m_format;
-    GLuint m_textureHandle;
+    GLuint m_textureID;
 
     bool m_initialized;
 public:
