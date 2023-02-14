@@ -57,7 +57,7 @@ Error Texture::LoadFromFile(const std::string &path)
 
     m_initialized = true;
 
-    LOG_DEBUG("Successfully loaded image: {}", path);
+    LOG_DEBUG("Texture loaded, path: {}", path);
 
     return OK;
 }

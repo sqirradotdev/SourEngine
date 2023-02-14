@@ -151,7 +151,6 @@ Error RenderManager::UseShader(const ShaderProgram& shader)
 
     if (m_currentShaderProgram != shader.m_programID)
     {
-        LOG_DEBUG("Bound Shader Program is different, changing...");
         m_currentShaderProgram = shader.m_programID;
         glUseProgram(shader.m_programID);
     }
@@ -169,7 +168,6 @@ Error RenderManager::UseTexture(std::shared_ptr<Texture> texture)
 
     if (m_currentTexture != texture)
     {
-        LOG_DEBUG("Bound Texture is different, changing...");
         m_currentTexture = texture;
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture->m_textureID);

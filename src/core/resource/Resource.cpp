@@ -4,6 +4,13 @@
 
 Resource::Resource() : m_path("") {}
 
-Resource::~Resource() = default;
+Resource::~Resource()
+#ifdef NDEBUG
+= default;
+#else
+{
+    LOG_DEBUG("Deleted resource id {}", m_id);
+}
+#endif
 
 unsigned int Resource::GetID() { return m_id; }
