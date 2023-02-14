@@ -17,44 +17,51 @@ void Application::Init()
 
     ResourceManager::Instance().Init();
     RenderManager::Instance().Init();
+
+    m_running = true;
 }
 
-void Application::Event()
+void Application::OnEvent()
 {
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        if (event.type == SDL_QUIT)
+            Quit();
+    }
 }
 
-void Application::Render()
+void Application::OnRender()
 {
+    RenderManager::Instance().Clear();
+    RenderManager::Instance().BeginBatched2D();
+    RenderManager::Instance().DrawBatchedRect(700, 10, 200, 200, 1.0f, 0.0f, 0.0f);
+    RenderManager::Instance().DrawBatchedRect(120, 50, 300, 150, 1.0f, 1.0f, 0.0f);
+    RenderManager::Instance().DrawBatchedRect(300, 300, 200, 250, 1.0f, 0.0f, 1.0f);
+    RenderManager::Instance().DrawBatchedRect(600, 340, 160, 100, 0.0f, 1.0f, 1.0f);
+    RenderManager::Instance().EndBatched2D();
+    RenderManager::Instance().Present();
 }
 
 int Application::Run()
 {
     Init();
 
-    auto test = ResourceManager::Instance().LoadTexture("./res/textures/placeholder.png");
+    auto test = ResourceManager::Instance().LoadTexture("./res/textures/testcard.qoi");
     RenderManager::Instance().UseTexture(test);
 
-    bool running = true;
-    while (running)
+    while (m_running)
     {
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-                running = false;
-        }
-
-        RenderManager::Instance().Clear();
-        RenderManager::Instance().BeginBatched2D();
-        RenderManager::Instance().DrawBatchedRect(700, 10, 200, 200, 1.0f, 0.0f, 0.0f);
-        RenderManager::Instance().DrawBatchedRect(120, 50, 300, 150, 1.0f, 1.0f, 0.0f);
-        RenderManager::Instance().DrawBatchedRect(300, 300, 200, 250, 1.0f, 0.0f, 1.0f);
-        RenderManager::Instance().DrawBatchedRect(600, 340, 160, 100, 0.0f, 1.0f, 1.0f);
-        RenderManager::Instance().EndBatched2D();
-        RenderManager::Instance().Present();
+        OnEvent();
+        OnRender();
     }
 
     SDL_Quit();
 
     return 0;
+}
+
+void Application::Quit()
+{
+    m_running = false;
 }

@@ -54,8 +54,7 @@ bool RenderManager::SetupBatched2D()
 
     m_batched2DState.shaderProgram.vertexShaderSource =
 
-R"(
-#version 330 core
+R"(#version 330 core
 
 layout (location = 0) in vec2 pos;
 layout (location = 1) in vec4 vertVColor;
@@ -76,8 +75,7 @@ void main()
 
     m_batched2DState.shaderProgram.fragmentShaderSource =
 
-R"(
-#version 330 core
+R"(#version 330 core
 
 in vec4 fragVColor;
 in vec2 fragUV;
@@ -89,8 +87,6 @@ uniform sampler2D u_texture;
 void main()
 {
     fragColor = texture(u_texture, fragUV);
-    //fragColor = fragVColor;
-    //fragColor = vec4(fragUV, 1.0f, 1.0f);
 }
 )";
 

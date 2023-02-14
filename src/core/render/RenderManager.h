@@ -1,8 +1,10 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 #include <SDL.h>
 #include <glm/mat4x4.hpp>
+#include <glad/glad.h>
 
 #include "../Manager.h"
 #include "../Error.h"
@@ -20,7 +22,7 @@ class RenderManager
 MANAGER_DECLARATION(RenderManager)
 private:
     SDL_Window* m_window;
-    SDL_GLContext m_glContext;   
+    SDL_GLContext m_glContext;
 
     struct
     {

@@ -1,6 +1,8 @@
 #include "Texture.h"
 
+#include <fstream>
 #include <stb_image.h>
+#include <qoi.h>
 
 #include "../LogManager.h"
 
@@ -15,16 +17,27 @@ Texture::~Texture()
 Error Texture::LoadFromFile(const std::string &path)
 {
     int width, height, channels;
-    unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 4);
+    unsigned char* data = nullptr;
+    if (path.compare(path.length() - 4, 4, ".png") == 0)
+    {
+        data = stbi_load(path.c_str(), &width, &height, &channels, 4);
+    }
+    else if (path.compare(path.length() - 4, 4, ".qoi") == 0)
+    {
+        qoi_desc desc;
+        data = (unsigned char*)qoi_read(path.c_str(), &desc, 4);
+        width = desc.width;
+        height = desc.height;
+        channels = desc.channels;
+    }
+
     if (data == nullptr)
     {
         LOG_ERROR("Failed to load image from file: {}", path);
         return FAILED;
     }
 
-    if (channels == 1)
-        m_format = BW;
-    else if (channels == 3)
+    if (channels == 3)
         m_format = RGB;
     else if (channels == 4)
         m_format = RGBA;

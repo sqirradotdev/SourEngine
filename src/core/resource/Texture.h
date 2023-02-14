@@ -14,7 +14,6 @@ RESOURCE_DECLARATION(Texture)
 public:
     enum Format
     {
-        BW,
         RGB,
         RGBA
     };
